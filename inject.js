@@ -329,7 +329,7 @@
     buttonInsertObserver.observe(document, {childList: true, subtree: true});
 
     window.addEventListener("message", (event) => {
-        if(event.data.action === "FL_GL_track") {
+        if (event.data.action === "FL_GL_track") {
             updateLocatorTrack(event.data.track);
         }
         
@@ -344,6 +344,7 @@
 
             console.debug("[FL Genius Loci] Mappings received, trying to detect current location...");
             detectCurrentLocation();
+            updateMuteButton();
         }
     });
 
