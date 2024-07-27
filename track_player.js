@@ -15,14 +15,14 @@ class TrackPlayer {
 
         this.previousGain = 1;
 
-        this.isMuted = false;
-
         this.audioCtx = context;
     }
 
     switchTracks() {
         console.debug("Switching tracks...");
-
+	
+	let prevGain = this.gainNode.gain.value
+	
         if (this.currentTrack) {
             this.currentTrack.stop(0);
             this.currentTrack.disconnect();
@@ -32,7 +32,7 @@ class TrackPlayer {
 
         this.currentTrack = this.nextTrack;
         this.gainNode = this.nextGainNode;
-        if (this.gainNode) {
+        if (this.gainNode && prevGain > 0) {
             this.gainNode.gain.linearRampToValueAtTime(0, this.audioCtx.currentTime + FADE_TIME);
         }
     }
@@ -58,11 +58,7 @@ class TrackPlayer {
 
         const newGain = this.audioCtx.createGain();
         newGain.gain.linearRampToValueAtTime(0, currTime);
-        if (!this.isMuted) {
-            newGain.gain.linearRampToValueAtTime(1, currTime + FADE_TIME);
-        } else {
-            this.previousGain = 1;
-        }
+        newGain.gain.linearRampToValueAtTime(1, currTime + FADE_TIME);
 
         newGain.connect(this.audioCtx.destination);
         newTrack.connect(newGain);
@@ -73,8 +69,6 @@ class TrackPlayer {
     }
 
     mute() {
-        this.isMuted = true;
-
         if (this.gainNode) {
             this.gainNode.gain.value = 0;
         }
@@ -86,8 +80,6 @@ class TrackPlayer {
     }
 
     unmute() {
-        this.isMuted = false;
-
         if (this.nextGainNode) {
             this.nextGainNode.gain.value = this.previousGain;
         }
