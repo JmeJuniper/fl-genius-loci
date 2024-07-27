@@ -344,7 +344,6 @@
 
             console.debug("[FL Genius Loci] Mappings received, trying to detect current location...");
             detectCurrentLocation();
-            updateMuteButton();
         }
     });
 
